@@ -1,32 +1,41 @@
-import { memo, useContext, useEffect, useRef, useState } from "react"
+import { memo, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { UserContext } from "../contexts/UserContext"
 import { TuplaData } from "../components/TuplaData"
 
 
 export const Usuarios = memo((props)=> {
-    const {initUserContex,user,validToken,createUser,getUserById,getAllUser,updateUser,deleteUser} = useContext(UserContext)
+    const {user,validToken,createUser,getUserById,getAllUser,updateUser,deleteUser} = useContext(UserContext)
     const formUsuarios = useRef()
     const tablaUsuariosBody = useRef()
     const [usuarios,setUsuarios] = useState([])
+    /*const usuariosMemo = useMemo( ()=>{
+        getAllUser()
+    },[user])*/
 
-    useEffect( ()=>{
+    useEffect( async()=>{
         console.log('useEffect usuarios render');
         //validToken()
+        
+        //setUsuarios(usuariosMemo)
 
-        //const users = await getAllUser()
-        //console.log('users: ',users);
-        /*if(users){
-            //console.log("usuarios: ",users);
-                    //mostrarListaUsuarios(usuarios)
-            //console.log('users: ',users);
-           setUsuarios(users)
-        }*/
-        /*getAllUser( (data)=>{
-            console.log("usuarios data: ",data);
+        //if(typeof(user)=='object'){
+            const users = await getAllUser()
+            console.log('users: ',users);
+            if(users){
+                //console.log("usuarios: ",users);
+                        //mostrarListaUsuarios(usuarios)
+                //console.log('users: ',users);
+            setUsuarios(users)
+            }
+        //}
+        /*if(typeof(user)!='string')
+        getAllUser( (data)=>{
+            console.log("getAllUser data: ",data);
             setUsuarios(data)
         })*/
         //console.log('tok: ',user,user.token);
-        if(!user.token) initUserContex()
+
+        /*if(!user.token) initUserContex()
         else
          if(usuarios.length<1)
         fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios`,{
@@ -42,8 +51,8 @@ export const Usuarios = memo((props)=> {
             console.log('data: ',data);
             //if(usuarios.length<1)
                 setUsuarios(data) 
-        }).catch( (err)=> console.log('error',err) )
-    })
+        }).catch( (err)=> console.log('error',err) )*/
+    },[user])
 
     //validToken()
 

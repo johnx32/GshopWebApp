@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { memo, useEffect } from "react"
 
-export default function ContentW(props) {
+const ContentW = memo((props)=> {
 
     useEffect(()=> console.log('useEffect ContentW'))
 
@@ -34,4 +34,5 @@ export default function ContentW(props) {
         </div>
         {/* /.content-wrapper */}
     </>)
-}
+})
+export default ContentW
