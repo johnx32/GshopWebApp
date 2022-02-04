@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 
 export default function Login(props) {
@@ -26,13 +26,14 @@ export default function Login(props) {
                 console.log('datos login: ',data);
                 setUsuario(data)
                 navigate('/')
+                //return <Navigate to='/' />
             }).catch((error) => {
                 console.error('Error:', error);
               });
     }
 
     return (
-        <div className="centrar" style={{ height: '100%' }}>
+        <div className="centrar" style={{ height: '100vh' }}>
 
             <div className="login-box">
                 <div className="card card-outline card-primary">

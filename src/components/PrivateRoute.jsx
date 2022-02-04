@@ -7,7 +7,6 @@ export default function PrivateRoute(props) {
     const { user } = useContext(UserContext)
     return (<>
         <Dashboard>
-            {console.log('usuario: ',user)}
             {user ? props.children : <Navigate to='/login' />}
         </Dashboard>
     </>)

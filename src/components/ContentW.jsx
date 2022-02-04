@@ -1,5 +1,9 @@
+import { useEffect } from "react"
 
 export default function ContentW(props) {
+
+    useEffect(()=> console.log('useEffect ContentW'))
+
     return (<>
         {/* Content Wrapper. Contains page content */}
         <div className="content-wrapper">

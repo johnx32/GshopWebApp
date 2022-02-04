@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -6,10 +6,9 @@ export const UserContext = createContext();
 
 export const UserContextProvider=(props)=> {
 
-    const [user,setUser] = useState( ()=> localStorage.getItem('user'))
+    //const [user,setUser] = useState( ()=> localStorage.getItem('user'))
+    const [user,setUser] = useState( localStorage.getItem('user'))
     const navigate = useNavigate()
-
-    console.log('init context');
     
     /*( ()=>{
         var u = localStorage.getItem('user')
@@ -19,28 +18,29 @@ export const UserContextProvider=(props)=> {
     })()*/
 
     function initUserContex(){
+        console.log('initUserContex');
         var u = localStorage.getItem('user')
         if(u) setUser(JSON.parse(u))
     }
 
-    /*useEffect( ()=>{
-        console.log('useEffect context');
-        var u = localStorage.getItem('user')
+    useEffect( ()=>{
+        console.log('useEffect context render');
+        /*var u = localStorage.getItem('user')
         if(u){
             //console.log('useEffect: string',typeof u);
             //console.log('useEffect: object', JSON.parse(u));
             //if(!user)
             setUser(JSON.parse(u))
-        }
-    },[u])*/
+        }*/
+    })
     
 
 
     const setUsuario = (value)=> {
         if(value){
-            console.log("token xprevio: ", value);
+            //console.log("token xprevio: ", value);
             localStorage.setItem('user',JSON.stringify(value))
-            console.log("token xprevio: ", value);
+            //console.log("token xprevio: ", value);
             setUser(value)
         }else{
             localStorage.removeItem('user')
