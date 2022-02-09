@@ -11,9 +11,9 @@ export default function Navbar(props) {
 
     return (<>
         {/* Preloader */}
-        <div className="preloader flex-column justify-content-center align-items-center">
+        {/* <div className="preloader flex-column justify-content-center align-items-center">
           <img className="animation__shake" src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height={60} width={60} />
-        </div>
+        </div> */}
         {/* Navbar */}
         <nav className="main-header navbar navbar-expand navbar-white navbar-light">
           {/* Left navbar links */}

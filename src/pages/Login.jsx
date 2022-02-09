@@ -1,8 +1,8 @@
-import { useContext, useRef } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { memo, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 
-export default function Login(props) {
+    const Login = memo((props)=> {
 
     const { setUsuario } = useContext(UserContext)
     const formLogin = useRef()
@@ -25,7 +25,7 @@ export default function Login(props) {
             .then(data => {
                 console.log('datos login: ',data);
                 setUsuario(data)
-                navigate('/')
+                //navigate('/')
                 //return <Navigate to='/' />
             }).catch((error) => {
                 console.error('Error:', error);
@@ -87,4 +87,5 @@ export default function Login(props) {
 
         </div>
     )
-}
+})
+export default Login

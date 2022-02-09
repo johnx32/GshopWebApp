@@ -13,7 +13,7 @@ function App() {
     <UserContextProvider>
       <Routes>
         <Route path='/login' element={<PublicRoute><Login/></PublicRoute>} />
-        <Route path='/' element={<PrivateRoute />} />
+        <Route path='/' element={<PrivateRoute ><div>home</div></PrivateRoute>} />
         <Route path='/about' navigate element={<PrivateRoute><div>Acerca de</div></PrivateRoute>} />
         <Route path='/usuarios' element={<PrivateRoute><Usuarios/></PrivateRoute>} />
         <Route path='/categorias' element={<PrivateRoute><Categoria/></PrivateRoute>} />

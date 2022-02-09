@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import Dashboard from "../containers/Dashboard";
 import { UserContext } from "../contexts/UserContext";
 
-export default function PrivateRoute(props) {
+const PrivateRoute = (props)=> {
+    useEffect(()=> console.log('useEffect PrivateRoute'))
     const { user } = useContext(UserContext)
     return (<>
         <Dashboard>
@@ -11,3 +12,4 @@ export default function PrivateRoute(props) {
         </Dashboard>
     </>)
 }
+export default PrivateRoute

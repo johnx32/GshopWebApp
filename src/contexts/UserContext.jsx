@@ -6,38 +6,17 @@ export const UserContext = createContext();
 
 export const UserContextProvider = memo((props)=> {
 
-    //const [user,setUser] = useState( ()=> localStorage.getItem('user'))
-    const [user,setUser] = useState( localStorage.getItem('user'))
+    const [user,setUser] = useState( ()=> localStorage.getItem('user'))
+    //const [user,setUser] = useState( localStorage.getItem('user'))
     const navigate = useNavigate()
-    
-    /*( ()=>{
-        var u = localStorage.getItem('user')
-        if(u){
-            if(!user) setUser(JSON.parse(u))
-        }
-    })()*/
-
-    function initUserContex(){
-        console.log('initUserContex');
-        var u = localStorage.getItem('user')
-        if(u) setUser(JSON.parse(u))
-    }
-
-
 
     useEffect( ()=>{
         console.log('useEffect context render');
         var u = localStorage.getItem('user')
-        console.log('useEffect context: string',typeof u);
-        console.log('useEffect context: object', JSON.parse(u));
         if(u){
-            
-            //if(!user)
             setUser(JSON.parse(u))//aqui el dilema, se actualiza user y renderiza Usuarios
         }
     },[])
-    
-
 
     const setUsuario = (value)=> {
         if(value){
@@ -93,14 +72,10 @@ export const UserContextProvider = memo((props)=> {
         return data
     }
 
-    //function getAllUser(getUsers){
     async function getAllUser(){
-        //console.log("token previo: ", typeof( JSON.parse(user) ) );
-        //if (typeof(user)=='string') setUsuario(JSON.parse(user))
-        //setUser(JSON.parse(user))
         console.log("token previo type: ", typeof(user));
-        //console.log("token previo: ", JSON.parse(user).token);
         if(typeof(user)=='object'){
+            console.log('si entro');
             var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios`,{
                                         method:'GET',
                                         headers: new Headers({
@@ -110,23 +85,9 @@ export const UserContextProvider = memo((props)=> {
                                     })
                 //console.log("respuesta: ",response);
             var data = await response.json()
+            console.log('d: ',data);
             return data
-        }else return null
-        
-        /*fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios`,{
-            method:'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization':'Bearer '+user.token
-            })
-        }).then( response =>{ 
-            console.log('respuesta: ',response);
-            return response.json() 
-        })
-        .then( data=>{
-            console.log('data: ',data);
-            getUsers(data) 
-        })*/
+        }else{ console.log('retorno null'); return null}
     }
 
     async function updateUser(newUser){
@@ -153,10 +114,8 @@ export const UserContextProvider = memo((props)=> {
     }
 
     
-
-
     return (
-        <UserContext.Provider value={ {user,validToken,setUsuario,createUser,getUserById,getAllUser,updateUser,deleteUser} }>
+        <UserContext.Provider value={ {user,setUsuario,createUser,getUserById,getAllUser,updateUser,deleteUser} }>
             {props.children}
         </UserContext.Provider>
     )
