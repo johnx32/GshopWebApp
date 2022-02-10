@@ -1,18 +1,89 @@
 import { memo, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { UserContext } from "../contexts/UserContext"
 import { TuplaData } from "../components/TuplaData"
-
+import Pagination from 'rc-pagination';
 
 export const Usuarios = memo((props) => {
     const { user, validToken, createUser, getUserById, getAllUser, updateUser, deleteUser } = useContext(UserContext)
     const formUsuarios = useRef()
     const selRoles = useRef()
     const tablaUsuariosBody = useRef()
-    const [usuarios, setUsuarios] = useState([])
+
     const [roles, setRoles] = useState([])
-    /*const usuariosMemo = useMemo( ()=>{
-        getAllUser()
-    },[user])*/
+    const [usuarios, setUsuarios] = useState([])
+    const [pagina,setPagina] = useState(0)
+    const [total,setTotal] = useState(0)
+    const [size,setSize] = useState(0)
+
+    /*const tusuarios = useMemo( async ()=>{
+        console.log('use memo');
+        var u = await getAllUser(pagina)
+        if(u)
+        setUsuariosInfo(u)
+        return u
+        //if (users) setUsuariosInfo(users)
+    },[user,pagina])*/
+
+    useEffect(async () => {
+        console.log('useEffect usuarios render');
+
+        //talvez aqui no deba estar
+        updateUsers()
+        
+        const roles = await getRoles()
+        if (roles) setRoles(roles)
+        
+    },[user,pagina])
+
+    async function sendDataUser(e) {
+        e.preventDefault()
+
+        var id = formUsuarios.current.elements['idUsuario'].value
+        var nombre = formUsuarios.current.elements['nombreUsuario'].value
+        var password = formUsuarios.current.elements['passwordUsuario'].value
+        var repassword = formUsuarios.current.elements['re-passwordUsuario'].value
+
+        var iroles = getRolesIdsForm()
+
+        var usuario = { "username": nombre, "password": password, "repassword":repassword, "roles": iroles }
+        if (id) {
+            updateUser(usuario)
+        } else {
+            const ok = await createUser(usuario)
+            if (ok) {
+                //todo:limpiar formulario
+                updateUsers()
+            }
+        }
+    }
+
+    async function onClickTableBody(e) {
+
+        // click en eliminar
+        if (e.target.classList.contains('btn-delete')) {
+            var id = e.target.dataset.id
+            var ok = await deleteUser(id)
+            console.log('ok: ',ok);
+            if (ok) {
+                //todo:limpiar formulario
+                updateUsers()
+            }
+        }
+
+        // click en editar
+        if (e.target.classList.contains('btn-edit')) {
+            var id = e.target.dataset.id
+            var u = await getUserById(id)
+
+            console.log('u: ', u);
+
+            var inNombre = formUsuarios.current.querySelector('#us-nombre')
+            var inId = formUsuarios.current.querySelector('#us-id')
+            inNombre.value = u.username
+            inId.value = u.id
+
+        }
+    }
 
     async function getRoles() {
         if (typeof (user) == 'object') {
@@ -39,80 +110,25 @@ export const Usuarios = memo((props) => {
         return iroles
     }
 
-    useEffect(async () => {
-        console.log('useEffect usuarios render');
-
-
-        //if(typeof(user)=='object'){
-        const users = await getAllUser()
-        if (users) setUsuarios(users)
-        
-        const roles = await getRoles()
-        if (roles) setRoles(roles)
-        
-    },[user])
-
-    async function sendDataUser(e) {
-        e.preventDefault()
-
-        var id = formUsuarios.current.elements['idUsuario'].value
-        var nombre = formUsuarios.current.elements['nombreUsuario'].value
-        var password = formUsuarios.current.elements['passwordUsuario'].value
-        var repassword = formUsuarios.current.elements['re-passwordUsuario'].value
-
-        var iroles = getRolesIdsForm()
-
-        var usuario = { "username": nombre, "password": password, "repassword":repassword, "roles": iroles }
-        if (id) {
-            updateUser(usuario)
-        } else {
-            const ok = await createUser(usuario)
-            if (ok) {
-                //todo:limpiar formulario
-                var iusuarios = await getAllUser()
-                if(iusuarios) setUsuarios(iusuarios)
-                    console.log('us', iusuarios);
-                    //mostrarListaUsuarios(usuarios)
-                
-            }
-        }
+    async function onchange(page){
+        console.log('page: ',page);
+        setPagina(page)
+        //const users = await getAllUser(pagina)
+        //if (users) setUsuariosInfo(users)
     }
 
-    async function onClickTableBody(e) {
-
-        // click en eliminar
-        if (e.target.classList.contains('btn-delete')) {
-            var id = e.target.dataset.id
-            var ok = await deleteUser(id)
-            console.log('ok: ',ok);
-            if (ok) {
-                //todo:limpiar formulario
-                /*getAllUser((u) => {
-                    console.log('us', u);
-                    //mostrarListaUsuarios(usuarios)
-                    setUsuarios(u)
-                })*/
-                var iusuarios = await getAllUser()
-                if(iusuarios) setUsuarios(iusuarios)
-                    console.log('us', iusuarios);
-            }
-        }
-
-        // click en editar
-        if (e.target.classList.contains('btn-edit')) {
-            var id = e.target.dataset.id
-            var u = await getUserById(id)
-
-            console.log('u: ', u);
-
-            var inNombre = formUsuarios.current.querySelector('#us-nombre')
-            var inId = formUsuarios.current.querySelector('#us-id')
-            inNombre.value = u.username
-            inId.value = u.id
-
-        }
+    async function updateUsers(){
+        //setPagina(pagina)
+        var iusuarios = await getAllUser(pagina)
+        if(iusuarios) setUsuariosInfo(iusuarios)
     }
 
+    function setUsuariosInfo(iusuarios){
+        setUsuarios(iusuarios.content)
+        //setPagina(iusuarios.number+1)
+        setSize(iusuarios.size)
+        setTotal(iusuarios.totalElements)
+    }
 
     return (<>
         <div className="col-md-6 mt-4">
@@ -154,7 +170,31 @@ export const Usuarios = memo((props) => {
             </div>
         </div>
 
-        <div className="col-12">
+        <div className="col-12 mb-2">
+            <Pagination 
+                current={pagina}
+            pageSize={size}
+            total={total}
+            onChange={onchange}
+            locale={{
+                // Options.jsx
+                items_per_page: '/ página',
+                jump_to: 'Ir a',
+                jump_to_confirm: 'confirmar',
+                page: 'Página',
+              
+                // Pagination.jsx
+                prev_page: 'Página anterior',
+                next_page: 'Página siguiente',
+                prev_5: '5 páginas previas',
+                next_5: '5 páginas siguientes',
+                prev_3: '3 páginas previas',
+                next_3: '3 páginas siguientes',
+                page_size: 'tamaño de página',
+              }}
+            readOnly />
+        </div>
+        <div className="col-12 pb-2">
             <div id="card-categorias" className="card">
                 <div className="card-header">
                     <h3 className="card-title">Lista de Usuarios</h3>
@@ -173,7 +213,11 @@ export const Usuarios = memo((props) => {
                         </thead>
                         <tbody ref={tablaUsuariosBody} onClick={onClickTableBody}>
                             {/* {console.log('u: ',usuarios)} */}
-                            {usuarios.length > 0 ? (usuarios.map((usuario, i) => <TuplaData key={i} usuario={usuario} />)) : null}
+                            
+                            {usuarios.length > 0 ?
+                                (usuarios.map((usuario, i) => <TuplaData key={i} usuario={usuario} />)) 
+                                : null}
+                            
                         </tbody>
                         <tfoot>
 

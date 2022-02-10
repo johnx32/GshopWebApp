@@ -11,7 +11,7 @@ export const UserContextProvider = memo((props)=> {
     const navigate = useNavigate()
 
     useEffect( ()=>{
-        console.log('useEffect context render');
+        console.log('useEffect context render ',user);
         var u = localStorage.getItem('user')
         if(u){
             setUser(JSON.parse(u))//aqui el dilema, se actualiza user y renderiza Usuarios
@@ -72,11 +72,12 @@ export const UserContextProvider = memo((props)=> {
         return data
     }
 
-    async function getAllUser(){
-        console.log("token previo type: ", typeof(user));
+    async function getAllUser(page){
+        //console.log("token previo type: ", typeof(user));
+        console.log('pag: ',page);
         if(typeof(user)=='object'){
             console.log('si entro');
-            var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios`,{
+            var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}`,{
                                         method:'GET',
                                         headers: new Headers({
                                             'Content-Type': 'application/json',
