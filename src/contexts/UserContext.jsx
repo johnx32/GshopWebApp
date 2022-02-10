@@ -6,23 +6,22 @@ export const UserContext = createContext();
 
 export const UserContextProvider = memo((props)=> {
 
-    const [user,setUser] = useState( ()=> localStorage.getItem('user'))
-    //const [user,setUser] = useState( localStorage.getItem('user'))
+    //const [user,setUser] = useState( ()=> localStorage.getItem('user'))
+    //const [user,setUser] = useState(null)
+    const [user,setUser] = useState( ()=> JSON.parse(localStorage.getItem('user')) )
     const navigate = useNavigate()
 
     useEffect( ()=>{
-        console.log('useEffect context render ',user);
-        var u = localStorage.getItem('user')
+        console.log('useEffect context render ');
+        /*var u = localStorage.getItem('user')
         if(u){
             setUser(JSON.parse(u))//aqui el dilema, se actualiza user y renderiza Usuarios
-        }
+        }*/
     },[])
 
     const setUsuario = (value)=> {
         if(value){
-            //console.log("token xprevio: ", value);
             localStorage.setItem('user',JSON.stringify(value))
-            //console.log("token xprevio: ", value);
             setUser(value)
         }else{
             localStorage.removeItem('user')
@@ -73,10 +72,8 @@ export const UserContextProvider = memo((props)=> {
     }
 
     async function getAllUser(page){
-        //console.log("token previo type: ", typeof(user));
-        console.log('pag: ',page);
-        if(typeof(user)=='object'){
-            console.log('si entro');
+        //if(typeof(user)=='object'){
+            //console.log('getAllUser user: ',user);
             var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}`,{
                                         method:'GET',
                                         headers: new Headers({
@@ -86,9 +83,8 @@ export const UserContextProvider = memo((props)=> {
                                     })
                 //console.log("respuesta: ",response);
             var data = await response.json()
-            console.log('d: ',data);
             return data
-        }else{ console.log('retorno null'); return null}
+        //}else{ console.log('retorno null'); return null}
     }
 
     async function updateUser(newUser){

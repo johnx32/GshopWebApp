@@ -15,15 +15,6 @@ export const Usuarios = memo((props) => {
     const [total,setTotal] = useState(0)
     const [size,setSize] = useState(0)
 
-    /*const tusuarios = useMemo( async ()=>{
-        console.log('use memo');
-        var u = await getAllUser(pagina)
-        if(u)
-        setUsuariosInfo(u)
-        return u
-        //if (users) setUsuariosInfo(users)
-    },[user,pagina])*/
-
     useEffect(async () => {
         console.log('useEffect usuarios render');
 
