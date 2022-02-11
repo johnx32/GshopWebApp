@@ -65,8 +65,8 @@ export const UserContextProvider = memo((props)=> {
         return data
     }
 
-    async function getAllUser(page){
-        var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}`,{
+    async function getAllUser(page,q){
+        var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}${q?`&name=${q}`:""}`,{
                                     method:'GET',
                                     headers: new Headers({
                                         'Content-Type': 'application/json',

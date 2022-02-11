@@ -5,24 +5,27 @@ import Pagination from 'rc-pagination';
 
 export const Usuarios = memo((props) => {
     const { user, validToken, createUser, getUserById, getAllUser, updateUser, deleteUser } = useContext(UserContext)
-    
-    
+
     const tablaUsuariosBody = useRef()
+    const inputSearch = useRef()
+    const formSearch = useRef()
+
 
     const [usuarios, setUsuarios] = useState([])
-    const [pagina,setPagina] = useState(0)
-    const [total,setTotal] = useState(0)
-    const [size,setSize] = useState(0)
+    const [pagina, setPagina] = useState(0)
+    const [total, setTotal] = useState(0)
+    const [size, setSize] = useState(0)
+    const [q, setQ] = useState(null)
 
     useEffect(async () => {
         console.log('useEffect usuarios render');
 
         //talvez aqui no deba estar
         updateUsers()
-        
-    },[user,pagina])
 
-    
+    }, [user, pagina, q])
+
+
 
     async function onClickTableBody(e) {
 
@@ -30,7 +33,7 @@ export const Usuarios = memo((props) => {
         if (e.target.classList.contains('btn-delete')) {
             var id = e.target.dataset.id
             var ok = await deleteUser(id)
-            console.log('ok: ',ok);
+            console.log('ok: ', ok);
             if (ok) {
                 //todo:limpiar formulario
                 updateUsers()
@@ -51,33 +54,56 @@ export const Usuarios = memo((props) => {
         }*/
     }
 
-    
 
-    async function onchange(page){
-        console.log('page: ',page);
+
+    async function onchange(page) {
+        console.log('page: ', page);
         setPagina(page)
         //const users = await getAllUser(pagina)
         //if (users) setUsuariosInfo(users)
     }
 
-    async function updateUsers(){
+    async function updateUsers() {
         //setPagina(pagina)
-        var iusuarios = await getAllUser(pagina)
-        if(iusuarios) setUsuariosInfo(iusuarios)
+        var iusuarios = await getAllUser(pagina, q)
+        if (iusuarios) setUsuariosInfo(iusuarios)
     }
 
-    function setUsuariosInfo(iusuarios){
+    function setUsuariosInfo(iusuarios) {
         setUsuarios(iusuarios.content)
-        //setPagina(iusuarios.number+1)
         setSize(iusuarios.size)
         setTotal(iusuarios.totalElements)
+    }
+
+    function buscarByName() {
+        var q = inputSearch.current.value
+        console.log('q: ', q);
+        setQ(q)
     }
 
     return (<>
         <div className="col-12">
             <div id="card-categorias" className="card">
                 <div className="card-header">
-                    <h3 className="card-title">Lista de Usuarios</h3>
+                    <div className="row">
+
+                        <div className="col-8" style={{ display: "flex", alignItems: "center", }}>
+                            <h3 className="card-title">Lista de Usuarios</h3>
+                        </div>
+
+                        <div className="col-4" style={{ display: "flex", alignItems: "flex-end", }}>
+                            <div className="input-group" >
+                                <input ref={inputSearch} type="search" className="form-control" placeholder="nombre de usuario" />
+                                <div className="input-group-append">
+                                    <button onClick={buscarByName} className="btn btn-default">
+                                        <i className="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
 
                 <div className="card-body">
@@ -92,11 +118,11 @@ export const Usuarios = memo((props) => {
                         </thead>
                         <tbody ref={tablaUsuariosBody} onClick={onClickTableBody}>
                             {/* {console.log('u: ',usuarios)} */}
-                            
+
                             {usuarios.length > 0 ?
                                 (usuarios.map((usuario, i) => <TuplaData key={i} usuario={usuario} />))
                                 : null}
-                            
+
                         </tbody>
                         <tfoot>
 
@@ -106,28 +132,28 @@ export const Usuarios = memo((props) => {
             </div>
         </div>
         <div className="col-12 pb-2">
-            <Pagination 
+            <Pagination
                 current={pagina}
-            pageSize={size}
-            total={total}
-            onChange={onchange}
-            locale={{
-                // Options.jsx
-                items_per_page: '/ página',
-                jump_to: 'Ir a',
-                jump_to_confirm: 'confirmar',
-                page: 'Página',
-              
-                // Pagination.jsx
-                prev_page: 'Página anterior',
-                next_page: 'Página siguiente',
-                prev_5: '5 páginas previas',
-                next_5: '5 páginas siguientes',
-                prev_3: '3 páginas previas',
-                next_3: '3 páginas siguientes',
-                page_size: 'tamaño de página',
-              }}
-            readOnly />
+                pageSize={size}
+                total={total}
+                onChange={onchange}
+                locale={{
+                    // Options.jsx
+                    items_per_page: '/ página',
+                    jump_to: 'Ir a',
+                    jump_to_confirm: 'confirmar',
+                    page: 'Página',
+
+                    // Pagination.jsx
+                    prev_page: 'Página anterior',
+                    next_page: 'Página siguiente',
+                    prev_5: '5 páginas previas',
+                    next_5: '5 páginas siguientes',
+                    prev_3: '3 páginas previas',
+                    next_3: '3 páginas siguientes',
+                    page_size: 'tamaño de página',
+                }}
+                readOnly />
         </div>
     </>)
 })
