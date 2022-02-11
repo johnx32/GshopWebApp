@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { UserContext } from "../contexts/UserContext"
-import { TuplaData } from "../components/TuplaData"
+import { UserContext } from "../../contexts/UserContext"
+import { TuplaData } from "../../components/TuplaData"
 import Pagination from 'rc-pagination';
 
 export const Usuarios = memo((props) => {
@@ -24,8 +24,6 @@ export const Usuarios = memo((props) => {
         updateUsers()
 
     }, [user, pagina, q])
-
-
 
     async function onClickTableBody(e) {
 
@@ -54,8 +52,6 @@ export const Usuarios = memo((props) => {
         }*/
     }
 
-
-
     async function onchange(page) {
         console.log('page: ', page);
         setPagina(page)
@@ -79,6 +75,7 @@ export const Usuarios = memo((props) => {
         var q = inputSearch.current.value
         console.log('q: ', q);
         setQ(q)
+        setPagina(1)
     }
 
     return (<>
