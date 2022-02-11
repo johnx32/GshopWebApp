@@ -6,6 +6,7 @@ import { UserContextProvider } from './contexts/UserContext'
 import { Usuarios } from './pages/Usuarios'
 import Categoria from './pages/Categoria'
 import Login from './pages/Login'
+import Usuario from './pages/usuarios/Usuario'
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
         <Route path='/login' element={<PublicRoute><Login/></PublicRoute>} />
         <Route path='/' element={<PrivateRoute ><div>home</div></PrivateRoute>} />
         <Route path='/about' navigate element={<PrivateRoute><div>Acerca de</div></PrivateRoute>} />
-        <Route path='/usuarios' element={<PrivateRoute><Usuarios/></PrivateRoute>} />
+        <Route path='usuarios' element={<PrivateRoute><Usuarios/></PrivateRoute>} ></Route>
+          <Route path='usuarios/:id' element={<PrivateRoute><Usuario/></PrivateRoute>} />
         <Route path='/categorias' element={<PrivateRoute><Categoria/></PrivateRoute>} />
         <Route path='/productos' element={<PrivateRoute>Producto</PrivateRoute>} />
         <Route path='*' element={<PrivateRoute><p>Pagina no encontrada</p></PrivateRoute>} />

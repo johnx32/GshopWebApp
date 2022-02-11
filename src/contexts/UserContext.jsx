@@ -6,17 +6,11 @@ export const UserContext = createContext();
 
 export const UserContextProvider = memo((props)=> {
 
-    //const [user,setUser] = useState( ()=> localStorage.getItem('user'))
-    //const [user,setUser] = useState(null)
     const [user,setUser] = useState( ()=> JSON.parse(localStorage.getItem('user')) )
     const navigate = useNavigate()
 
     useEffect( ()=>{
-        console.log('useEffect context render ');
-        /*var u = localStorage.getItem('user')
-        if(u){
-            setUser(JSON.parse(u))//aqui el dilema, se actualiza user y renderiza Usuarios
-        }*/
+        console.log('useEffect context render ')
     },[])
 
     const setUsuario = (value)=> {
@@ -72,19 +66,15 @@ export const UserContextProvider = memo((props)=> {
     }
 
     async function getAllUser(page){
-        //if(typeof(user)=='object'){
-            //console.log('getAllUser user: ',user);
-            var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}`,{
-                                        method:'GET',
-                                        headers: new Headers({
-                                            'Content-Type': 'application/json',
-                                            'Authorization':'Bearer '+user.token
-                                        })
+        var response = await fetch(`${import.meta.env.VITE_URL_DOMAIN}/api/usuarios?page=${page-1}`,{
+                                    method:'GET',
+                                    headers: new Headers({
+                                        'Content-Type': 'application/json',
+                                        'Authorization':'Bearer '+user.token
                                     })
-                //console.log("respuesta: ",response);
-            var data = await response.json()
-            return data
-        //}else{ console.log('retorno null'); return null}
+                                })
+        var data = await response.json()
+        return data
     }
 
     async function updateUser(newUser){
@@ -110,7 +100,6 @@ export const UserContextProvider = memo((props)=> {
         return response.ok
     }
 
-    
     return (
         <UserContext.Provider value={ {user,setUsuario,createUser,getUserById,getAllUser,updateUser,deleteUser} }>
             {props.children}
