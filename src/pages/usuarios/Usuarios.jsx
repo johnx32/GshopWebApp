@@ -2,14 +2,14 @@ import { memo, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { UserContext } from "../../contexts/UserContext"
 import { TuplaData } from "../../components/TuplaData"
 import Pagination from 'rc-pagination';
+import { Link } from "react-router-dom";
 
-export const Usuarios = memo((props) => {
+const Usuarios = memo((props) => {
     const { user, validToken, createUser, getUserById, getAllUser, updateUser, deleteUser } = useContext(UserContext)
 
     const tablaUsuariosBody = useRef()
     const inputSearch = useRef()
     const formSearch = useRef()
-
 
     const [usuarios, setUsuarios] = useState([])
     const [pagina, setPagina] = useState(0)
@@ -84,11 +84,17 @@ export const Usuarios = memo((props) => {
                 <div className="card-header">
                     <div className="row">
 
-                        <div className="col-8" style={{ display: "flex", alignItems: "center", }}>
+                        <div className="col-3" style={{ display: "flex", alignItems: "center", }}>
                             <h3 className="card-title">Lista de Usuarios</h3>
                         </div>
 
-                        <div className="col-4" style={{ display: "flex", alignItems: "flex-end", }}>
+                        <div className="col-6">
+                            <Link to={'/usuarios/crear'}>
+                                <div className="btn btn-success">Crear</div>
+                            </Link>
+                        </div>
+
+                        <div className="col-3" style={{ display: "flex", alignItems: "flex-end", }}>
                             <div className="input-group" >
                                 <input ref={inputSearch} type="search" className="form-control" placeholder="nombre de usuario" />
                                 <div className="input-group-append">
@@ -154,3 +160,4 @@ export const Usuarios = memo((props) => {
         </div>
     </>)
 })
+export default Usuarios

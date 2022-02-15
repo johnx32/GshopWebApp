@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { UserContext } from "../../contexts/UserContext"
 
 const Usuario = (props) => {
@@ -7,6 +7,7 @@ const Usuario = (props) => {
     const [roles, setRoles] = useState([])
     const formUsuario = useRef()
     const selRoles = useRef()
+    const navigate = useNavigate()
     const [usuario, setUsuario] = useState(null)
     //const {usuario} = props
     const { id } = useParams()
@@ -46,6 +47,7 @@ const Usuario = (props) => {
             const ok = await createUser(usuario)
             if (ok) {
                 resetFormCategoriaValues()
+                navigate(-1)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -94,8 +96,12 @@ const Usuario = (props) => {
     }
 
     function resetFormCategoriaValues() {
-        formUsuario.current.reset()
-        formUsuario.current.querySelector('#cat-id').removeAttribute('value')
+        try {
+            formUsuario.current.reset()
+            formUsuario.current.querySelector('#cat-id').removeAttribute('value')
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (<>
