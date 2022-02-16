@@ -9,11 +9,10 @@ const Usuario = (props) => {
     const selRoles = useRef()
     const navigate = useNavigate()
     const [usuario, setUsuario] = useState(null)
-    //const {usuario} = props
     const { id } = useParams()
 
     useEffect(async () => {
-        console.log('useEffect usuario');
+        console.log('useEffect usuario')
         const iroles = await getRoles()
         console.log('roles: ', iroles);
         if (iroles) setRoles(iroles)
