@@ -9,6 +9,7 @@ import Categoria from './pages/categoria/Categoria'
 import Login from './pages/Login'
 import Usuario from './pages/usuarios/Usuario'
 import Productos from './pages/productos/Productos'
+import Producto from './pages/productos/Producto'
 function App() {
 
   return (<BrowserRouter>
@@ -24,6 +25,9 @@ function App() {
           <Route path='/categorias/:id'   element={<PrivateRoute><Categoria/></PrivateRoute>} />
           <Route path='/categorias/crear' element={<PrivateRoute><Categoria/></PrivateRoute>} />
         <Route path='/productos' element={<PrivateRoute><Productos/></PrivateRoute>} />
+          <Route path='/productos/:id' element={<PrivateRoute><Producto/></PrivateRoute>} />
+          <Route path='/productos/crear' element={<PrivateRoute><Producto/></PrivateRoute>} />
+
         <Route path='*' element={<PrivateRoute><p>Pagina no encontrada</p></PrivateRoute>} />
       </Routes>
     </UserContextProvider>

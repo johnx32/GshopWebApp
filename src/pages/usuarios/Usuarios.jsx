@@ -21,6 +21,7 @@ const Usuarios = (props) => {
     }, [user, pagina, dofetch])
 
             async function fetchAllUsers() {
+                //todo:verificar si la pagina es la misma, puede q este en la ultima pagina y esta desaparesca a eliminar su unico elemento
                 var iusuarios = await getAllUser(pagina, q)
                 if (iusuarios) setUsuariosInfo(iusuarios)
                 console.log('iusers: ', iusuarios);

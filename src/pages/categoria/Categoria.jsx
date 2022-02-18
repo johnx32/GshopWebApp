@@ -77,9 +77,7 @@ const Categoria = (props) => {
             //xCargarCategoriaAForm(categoria)
         })
     }
-
-
-
+    
     return (<>
         <div className="col-md-6 mt-4">
             {/* <!-- general form elements --> */}
